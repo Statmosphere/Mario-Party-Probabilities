@@ -12,10 +12,12 @@ def CutFromtheTeam(wires, cut, placements, cutting, results):
             if cut.count(False) > 0:
                 results = CutFromtheTeam(wires, cut, placements, (cutting + 1) % 4, results)
             else:
-                placements[cutting] = 1
                 game = []
                 for j in range(len(placements)):
-                    game.append(placements[j])
+                    if placements[j] == "":
+                        game.append(1)
+                    else:
+                        game.append(placements[j])
                 results.append(game)
             cut[i] = False
             placements[cutting] = ""
@@ -24,6 +26,8 @@ def CutFromtheTeam(wires, cut, placements, cutting, results):
 def main():
     temp = True
     if temp:
+        graph = GraphWin("Bar Graph", 1250, 500)
+        graph.setCoords(0, 0, 4, 1500000)
         wires = []
         cut = []
         for i in range(10):
@@ -51,16 +55,13 @@ def main():
         placements = ["", "", "", ""]
         results = []
         results = CutFromtheTeam(wires, cut, placements, 0, results)
-        graph = GraphWin("Bar Graph", 500, 500)
-        graph.setCoords(0, 0, 4, 1400000)
-        totals = [0, 0, 0, 0]
+        text = []
         for i in range(1, 5):
             placements = [0, 0, 0, 0]
             for j in range(len(results)):
                 for k in range(len(results[j])):
                     if results[j][k] == i:
                         placements[k] += 1
-            error = len(results)
             for j in range(4):
                 box = Rectangle(Point(j+i*0.2-0.1, 0), Point(j+i*0.2+0.1, placements[j]))
                 if j == 0:
@@ -72,11 +73,9 @@ def main():
                 else:
                     box.setFill(color_rgb(255, 255, 0))
                 box.draw(graph)
-                error -= placements[j]
-                totals[j] += placements[j]
-            print(str(error))
-        for i in range(len(totals)):
-            print(str(totals[i]))
+                text.append(Text(Point(j+i*0.2, placements[j]+20000), str(round(placements[j]/len(results)*100, 3)) + "%"))
+        for i in range(len(text)):
+            text[i].draw(graph)
         graph.getMouse()
 
 main()
