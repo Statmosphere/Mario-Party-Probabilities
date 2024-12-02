@@ -46,3 +46,63 @@ def Mathlete():
             box.setFill(color_rgb(0, 0, 255))
         box.draw(graph)
     graph.getMouse()
+
+def FightCards(options, remaining, round, results):
+    playerChoices = ["", "", "", ""]
+    playing = []
+    for i in range(len(remaining)):
+        playing.append(remaining[i])
+    for i in range(len(options)):
+        playerChoices[0] = options[i]
+        for j in range(len(options)):
+            playerChoices[1] = options[j]
+            for k in range(len(options)):
+                playerChoices[2] = options[k]
+                for l in range(len(options)):
+                    if round == 1:
+                        print(str(i*27+j*9+k*3+l))
+                    playerChoices[3] = options[l]
+                    for m in range(1, len(playerChoices)):
+                        if playerChoices[0] == playerChoices[m]:
+                            playing[m-1] = False
+                    if playing.count(False) == 3:
+                        results[0] += 81**(5-round)
+                    elif round == 5:
+                        results[1] += 1
+                    else:
+                        FightCards(options, playing, round+1, results)
+                    for m in range(len(playing)):
+                        playing[m] = remaining[m]
+
+def main():
+    games = GraphWin("Minigames", 400, 200)
+    games.setCoords(0, 0, 1, 1)
+    divider = Line(Point(0.5, 0), Point(0.5, 1))
+    divider.draw(games)
+    text1 = Text(Point(0.25, 0.5), "Mathletes")
+    text1.draw(games)
+    text2 = Text(Point(0.75, 0.5), "Fight Cards")
+    text2.draw(games)
+    choice = games.getMouse()
+    if choice.x < 0.5:
+        Mathlete()
+    else:
+        options = ["Punch", "Chop", "Kick"]
+        remaining = [True, True, True]
+        results = [0, 0]
+        pieChart = GraphWin("Fight Cards", 200, 200)
+        pieChart.setCoords(-1, -1, 1, 1)
+        pie = Circle(Point(0, 0), 1)
+        pie.draw(pieChart)
+        text1 = Text(Point(-0.5, 0.2), "1-Player")
+        text1.draw(pieChart)
+        text2 = Text(Point(0.5, 0.2), "3-Players")
+        text2.draw(pieChart)
+        FightCards(options, remaining, 1, results)
+        percent1 = Text(Point(-0.5, -0.2), str(round(results[0]/3**20*100, 3))+"%")
+        percent1.draw(pieChart)
+        percent2 = Text(Point(0.5, -0.2), str(round(results[1]/3**20*100, 3))+"%")
+        percent2.draw(pieChart)
+        pieChart.getMouse()
+
+main()
