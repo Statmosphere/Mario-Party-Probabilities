@@ -1,4 +1,5 @@
 from graphics import *
+import math
 
 def Mathlete():
     results = []
@@ -47,32 +48,42 @@ def Mathlete():
         box.draw(graph)
     graph.getMouse()
 
-def FightCards(options, remaining, round, results):
-    playerChoices = ["", "", "", ""]
-    playing = []
-    for i in range(len(remaining)):
-        playing.append(remaining[i])
-    for i in range(len(options)):
-        playerChoices[0] = options[i]
-        for j in range(len(options)):
-            playerChoices[1] = options[j]
-            for k in range(len(options)):
-                playerChoices[2] = options[k]
-                for l in range(len(options)):
-                    if round == 1:
-                        print(str(i*27+j*9+k*3+l))
-                    playerChoices[3] = options[l]
-                    for m in range(1, len(playerChoices)):
-                        if playerChoices[0] == playerChoices[m]:
-                            playing[m-1] = False
-                    if playing.count(False) == 3:
-                        results[0] += 81**(5-round)
-                    elif round == 5:
-                        results[1] += 1
-                    else:
-                        FightCards(options, playing, round+1, results)
-                    for m in range(len(playing)):
-                        playing[m] = remaining[m]
+def FightCards():
+    player1Wins = 0
+    player3Wins = 0
+    remaining1 = 3
+    while remaining1 >= 0:
+        chance1 = math.factorial(3)/(math.factorial(remaining1)*math.factorial(3-remaining1))*(1/3)**remaining1*(2/3)**(3-remaining1)
+        remaining2 = remaining1
+        while remaining2 >= 0:
+            chance2 = chance1 * math.factorial(remaining1)/(math.factorial(remaining2)*math.factorial(remaining1-remaining2))*(1/3)**remaining2*(2/3)**(remaining1-remaining2)
+            remaining3 = remaining2
+            while remaining3 >= 0:
+                chance3 = chance2 * math.factorial(remaining2)/(math.factorial(remaining3)*math.factorial(remaining2-remaining3))*(1/3)**remaining3*(2/3)**(remaining2-remaining3)
+                remaining4 = remaining3
+                while remaining4 >= 0:
+                    chance4 = chance3 * math.factorial(remaining3)/(math.factorial(remaining4)*math.factorial(remaining3-remaining4))*(1/3)**remaining4*(2/3)**(remaining3-remaining4)
+                    remaining5 = remaining4
+                    while remaining5 >= 0:
+                        chance5 = chance4 * math.factorial(remaining4)/(math.factorial(remaining5)*math.factorial(remaining4-remaining5))*(1/3)**remaining5*(2/3)**(remaining4-remaining5)
+                        if remaining5 == 0:
+                            player1Wins += chance5
+                        else:
+                            player3Wins += chance5
+                        remaining5 -= 1
+                    if remaining4 == 0:
+                        player1Wins += chance4
+                    remaining4 -= 1
+                if remaining3 == 0:
+                    player1Wins += chance3
+                remaining3 -= 1
+            if remaining2 == 0:
+                player1Wins += chance2
+            remaining2 -= 1
+        if remaining1 == 0:
+            player1Wins += chance1
+        remaining1 -= 1
+    print(str(player1Wins) + " " + str(player3Wins))
 
 def main():
     games = GraphWin("Minigames", 400, 200)
@@ -87,7 +98,7 @@ def main():
     if choice.x < 0.5:
         Mathlete()
     else:
-        options = ["Punch", "Chop", "Kick"]
+        """options = ["Punch", "Chop", "Kick"]
         remaining = [True, True, True]
         results = [0, 0]
         pieChart = GraphWin("Fight Cards", 200, 200)
@@ -103,6 +114,7 @@ def main():
         percent1.draw(pieChart)
         percent2 = Text(Point(0.5, -0.2), str(round(results[1]/3**20*100, 3))+"%")
         percent2.draw(pieChart)
-        pieChart.getMouse()
+        pieChart.getMouse()"""
+        FightCards()
 
 main()
