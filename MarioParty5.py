@@ -55,16 +55,16 @@ def FightCards():
     while remaining1 >= 0:
         chance1 = math.factorial(3)/(math.factorial(remaining1)*math.factorial(3-remaining1))*(1/3)**remaining1*(2/3)**(3-remaining1)
         remaining2 = remaining1
-        while remaining2 >= 0:
+        while remaining2 >= 0 and remaining1 > 0:
             chance2 = chance1 * math.factorial(remaining1)/(math.factorial(remaining2)*math.factorial(remaining1-remaining2))*(1/3)**remaining2*(2/3)**(remaining1-remaining2)
             remaining3 = remaining2
-            while remaining3 >= 0:
+            while remaining3 >= 0 and remaining2 > 0:
                 chance3 = chance2 * math.factorial(remaining2)/(math.factorial(remaining3)*math.factorial(remaining2-remaining3))*(1/3)**remaining3*(2/3)**(remaining2-remaining3)
                 remaining4 = remaining3
-                while remaining4 >= 0:
+                while remaining4 >= 0 and remaining3 > 0:
                     chance4 = chance3 * math.factorial(remaining3)/(math.factorial(remaining4)*math.factorial(remaining3-remaining4))*(1/3)**remaining4*(2/3)**(remaining3-remaining4)
                     remaining5 = remaining4
-                    while remaining5 >= 0:
+                    while remaining5 >= 0 and remaining4 > 0:
                         chance5 = chance4 * math.factorial(remaining4)/(math.factorial(remaining5)*math.factorial(remaining4-remaining5))*(1/3)**remaining5*(2/3)**(remaining4-remaining5)
                         if remaining5 == 0:
                             player1Wins += chance5
@@ -83,7 +83,8 @@ def FightCards():
         if remaining1 == 0:
             player1Wins += chance1
         remaining1 -= 1
-    print(str(player1Wins) + " " + str(player3Wins))
+    print("The solo player wins " + str(round(player1Wins, 4)) + "% of the time.")
+    print("The team of 3 wins " + str(round(player3Wins, 4)) + "% of the time.")
 
 def main():
     games = GraphWin("Minigames", 400, 200)
@@ -98,23 +99,6 @@ def main():
     if choice.x < 0.5:
         Mathlete()
     else:
-        """options = ["Punch", "Chop", "Kick"]
-        remaining = [True, True, True]
-        results = [0, 0]
-        pieChart = GraphWin("Fight Cards", 200, 200)
-        pieChart.setCoords(-1, -1, 1, 1)
-        pie = Circle(Point(0, 0), 1)
-        pie.draw(pieChart)
-        text1 = Text(Point(-0.5, 0.2), "1-Player")
-        text1.draw(pieChart)
-        text2 = Text(Point(0.5, 0.2), "3-Players")
-        text2.draw(pieChart)
-        FightCards(options, remaining, 1, results)
-        percent1 = Text(Point(-0.5, -0.2), str(round(results[0]/3**20*100, 3))+"%")
-        percent1.draw(pieChart)
-        percent2 = Text(Point(0.5, -0.2), str(round(results[1]/3**20*100, 3))+"%")
-        percent2.draw(pieChart)
-        pieChart.getMouse()"""
         FightCards()
 
 main()
